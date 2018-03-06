@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { Product } from '../../model/product.model';
-import { MODES, SharedState } from '../shared-state.model';
+import { MODES, StateService } from '../state.service';
 import { NgForm } from '@angular/forms';
 import { RepositoryService } from '../../model/repository.service';
 
@@ -9,12 +9,13 @@ import { RepositoryService } from '../../model/repository.service';
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss']
 })
-export class FormComponent {
+export class FormComponent implements DoCheck {
 
   product: Product = new Product();
+  lastId: number;
 
   constructor(private model: RepositoryService,
-              private state: SharedState) {
+              private state: StateService) {
   }
 
   get editing(): boolean {
@@ -31,6 +32,16 @@ export class FormComponent {
 
   resetForm() {
     this.product = new Product();
+  }
+
+  ngDoCheck() {
+    if (this.lastId !== this.state.id) {
+      this.product = new Product();
+      if (this.state.mode === MODES.EDIT) {
+        Object.assign(this.product, this.model.getProduct(this.state.id));
+      }
+      this.lastId = this.state.id;
+    }
   }
 
 }

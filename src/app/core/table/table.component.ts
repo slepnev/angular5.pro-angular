@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MODES, SharedState } from '../shared-state.model';
+import { MODES, StateService } from '../state.service';
 import { Product } from '../../model/product.model';
 import { RepositoryService } from '../../model/repository.service';
 
@@ -10,7 +10,7 @@ import { RepositoryService } from '../../model/repository.service';
 })
 export class TableComponent {
 
-  constructor(private model: RepositoryService, private state: SharedState) {
+  constructor(private model: RepositoryService, private state: StateService) {
   }
 
   getProduct(key: number): Product {

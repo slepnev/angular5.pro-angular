@@ -5,12 +5,12 @@ import { FormComponent } from './form/form.component';
 import { ModelModule } from '../model/model.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { SharedState } from './shared-state.model';
+import { StateService } from './state.service';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, ModelModule],
   declarations: [TableComponent, FormComponent],
   exports: [ModelModule, TableComponent, FormComponent],
-  providers: [SharedState]
+  providers: [StateService]
 })
 export class CoreModule { }
