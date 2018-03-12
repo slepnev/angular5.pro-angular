@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, Inject, OnInit } from '@angular/core';
 import { Product } from '../../model/product.model';
-import { MODES, SharedState } from '../shared-state.model';
+import { MODES, SHARED_STATE, StateService } from '../state.service';
 import { NgForm } from '@angular/forms';
 import { RepositoryService } from '../../model/repository.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-form',
@@ -12,13 +13,17 @@ import { RepositoryService } from '../../model/repository.service';
 export class FormComponent {
 
   product: Product = new Product();
+  editing = false;
 
   constructor(private model: RepositoryService,
-              private state: SharedState) {
-  }
-
-  get editing(): boolean {
-    return this.state.mode === MODES.EDIT;
+              @Inject(SHARED_STATE) public stateEvents: Observable<StateService>) {
+    stateEvents.subscribe((update) => {
+      this.product = new Product();
+      if (update.id !== undefined) {
+        Object.assign(this.product, this.model.getProduct(update.id));
+      }
+      this.editing = update.mode === MODES.EDIT;
+    });
   }
 
   submitForm(form: NgForm) {
