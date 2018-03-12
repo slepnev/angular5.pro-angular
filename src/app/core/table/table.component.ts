@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { MODES, StateService } from '../state.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MODES, SHARED_STATE, StateService } from '../state.service';
 import { Product } from '../../model/product.model';
 import { RepositoryService } from '../../model/repository.service';
+import { Observer } from 'rxjs/Observer';
 
 @Component({
   selector: 'app-table',
@@ -10,7 +11,7 @@ import { RepositoryService } from '../../model/repository.service';
 })
 export class TableComponent {
 
-  constructor(private model: RepositoryService, private state: StateService) {
+  constructor(private model: RepositoryService, @Inject(SHARED_STATE) private observer: Observer<StateService>) {
   }
 
   getProduct(key: number): Product {
@@ -26,13 +27,11 @@ export class TableComponent {
   }
 
   editProduct(key: number) {
-    this.state.id = key;
-    this.state.mode = MODES.EDIT;
+    this.observer.next(new StateService(MODES.EDIT, key));
   }
 
   createProduct() {
-    this.state.id = undefined;
-    this.state.mode = MODES.CREATE;
+    this.observer.next(new StateService(MODES.CREATE));
   }
 
 }

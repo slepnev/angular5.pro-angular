@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken } from '@angular/core';
 
 export enum MODES {
   CREATE, EDIT
@@ -12,4 +12,4 @@ export class StateService {
 
 }
 
-export const SHARED_STATE = new OpaqueToken('shared_state');
+export const SHARED_STATE = new InjectionToken('shared_state');

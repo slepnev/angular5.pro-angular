@@ -1,25 +1,29 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, DoCheck, Inject, OnInit } from '@angular/core';
 import { Product } from '../../model/product.model';
-import { MODES, StateService } from '../state.service';
+import { MODES, SHARED_STATE, StateService } from '../state.service';
 import { NgForm } from '@angular/forms';
 import { RepositoryService } from '../../model/repository.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss']
 })
-export class FormComponent implements DoCheck {
+export class FormComponent {
 
   product: Product = new Product();
-  lastId: number;
+  editing = false;
 
   constructor(private model: RepositoryService,
-              private state: StateService) {
-  }
-
-  get editing(): boolean {
-    return this.state.mode === MODES.EDIT;
+              @Inject(SHARED_STATE) public stateEvents: Observable<StateService>) {
+    stateEvents.subscribe((update) => {
+      this.product = new Product();
+      if (update.id !== undefined) {
+        Object.assign(this.product, this.model.getProduct(update.id));
+      }
+      this.editing = update.mode === MODES.EDIT;
+    });
   }
 
   submitForm(form: NgForm) {
@@ -32,16 +36,6 @@ export class FormComponent implements DoCheck {
 
   resetForm() {
     this.product = new Product();
-  }
-
-  ngDoCheck() {
-    if (this.lastId !== this.state.id) {
-      this.product = new Product();
-      if (this.state.mode === MODES.EDIT) {
-        Object.assign(this.product, this.model.getProduct(this.state.id));
-      }
-      this.lastId = this.state.id;
-    }
   }
 
 }
