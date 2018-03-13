@@ -8,11 +8,10 @@ import { Message } from './message.model';
   styleUrls: ['./message.component.scss']
 })
 export class MessageComponent implements OnInit {
-
   lastMessage: Message;
 
   constructor(messageService: MessageService) {
-    messageService.registerMessageHandler(m => this.lastMessage = m);
+    messageService.messages.subscribe(m => this.lastMessage = m);
   }
 
   ngOnInit() {
