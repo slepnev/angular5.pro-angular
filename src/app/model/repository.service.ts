@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Product } from './product.model';
-import { StaticDataService } from './static-data.service';
+import { HttpClient } from '@angular/common/http';
+import { RestDataService } from './rest-data.service';
 
 @Injectable()
 export class RepositoryService {
@@ -8,8 +9,8 @@ export class RepositoryService {
   private products: Product[];
   private locator = (p: Product, id: number) => p.id === id;
 
-  constructor(private dataSource: StaticDataService) {
-    this.products = new Array<Product>();
+  constructor(private dataSource: RestDataService, private http: HttpClient) {
+    this.products = <Product>[];
     this.dataSource.getData().forEach(p => this.products.push(p));
   }
 

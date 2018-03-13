@@ -1,4 +1,4 @@
-import { Component, DoCheck, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Product } from '../../model/product.model';
 import { MODES, SHARED_STATE, StateService } from '../state.service';
 import { NgForm } from '@angular/forms';
@@ -17,13 +17,14 @@ export class FormComponent {
 
   constructor(private model: RepositoryService,
               @Inject(SHARED_STATE) public stateEvents: Observable<StateService>) {
-    stateEvents.subscribe((update) => {
-      this.product = new Product();
-      if (update.id !== undefined) {
-        Object.assign(this.product, this.model.getProduct(update.id));
-      }
-      this.editing = update.mode === MODES.EDIT;
-    });
+    stateEvents
+      .subscribe(update => {
+        this.product = new Product();
+        if (update.id !== undefined) {
+          Object.assign(this.product, this.model.getProduct(update.id));
+        }
+        this.editing = update.mode === MODES.EDIT;
+      });
   }
 
   submitForm(form: NgForm) {
