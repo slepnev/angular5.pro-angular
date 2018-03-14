@@ -10,8 +10,10 @@ import { Message } from './message.model';
 export class MessageComponent implements OnInit {
   lastMessage: Message;
 
-  constructor(messageService: MessageService) {
-    messageService.messages.subscribe(m => this.lastMessage = m);
+  constructor(public messageService: MessageService) {
+    this.messageService.messages.subscribe(m => {
+      this.lastMessage = m;
+    });
   }
 
   ngOnInit() {

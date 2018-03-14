@@ -10,8 +10,12 @@ export class RepositoryService {
   private locator = (p: Product, id: number) => p.id === id;
 
   constructor(private dataSource: RestDataService, private http: HttpClient) {
-    this.products = <Product>[];
-    this.dataSource.getData().forEach(p => this.products.push(p));
+    this.products = [];
+    this.dataSource.getData().subscribe(
+      (response) => {
+        this.products = response;
+      }
+    );
   }
 
   getProducts(): Product[] {
@@ -24,20 +28,24 @@ export class RepositoryService {
 
   saveProduct(product: Product) {
     if (product.id === 0 || product.id == null) {
-      product.id = this.generateID();
-      this.products.push(product);
+      this.dataSource.saveProduct(product)
+        .subscribe(p => this.products.push(p));
     } else {
-      let index = this.products
-        .findIndex(p => this.locator(p, product.id));
-      this.products.splice(index, 1, product);
+      this.dataSource.updateProduct(product).subscribe(p => {
+        const index = this.products
+          .findIndex(item => this.locator(item, p.id));
+        this.products.splice(index, 1, p);
+      });
     }
   }
 
   deleteProduct(id: number) {
-    let index = this.products.findIndex(p => this.locator(p, id));
-    if (index > -1) {
-      this.products.splice(index, 1);
-    }
+    this.dataSource.deleteProduct(id).subscribe(() => {
+      const index = this.products.findIndex(p => this.locator(p, id));
+      if (index > -1) {
+        this.products.splice(index, 1);
+      }
+    });
   }
 
   private generateID(): number {
