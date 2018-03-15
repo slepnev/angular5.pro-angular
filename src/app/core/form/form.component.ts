@@ -4,6 +4,7 @@ import { MODES, SHARED_STATE, StateService } from '../state.service';
 import { NgForm } from '@angular/forms';
 import { RepositoryService } from '../../model/repository.service';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -16,7 +17,7 @@ export class FormComponent {
   editing = false;
 
   constructor(private model: RepositoryService,
-              @Inject(SHARED_STATE) public stateEvents: Observable<StateService>) {
+              @Inject(SHARED_STATE) public stateEvents: Observable<StateService>, public router: Router) {
     stateEvents
       .subscribe(update => {
         this.product = new Product();
@@ -32,6 +33,7 @@ export class FormComponent {
       this.model.saveProduct(this.product);
       this.product = new Product();
       form.reset();
+      this.router.navigateByUrl('/');
     }
   }
 
