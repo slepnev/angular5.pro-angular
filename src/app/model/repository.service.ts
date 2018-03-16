@@ -7,7 +7,7 @@ import { RestDataService } from './rest-data.service';
 export class RepositoryService {
 
   private products: Product[];
-  private locator = (p: Product, id: number) => p.id === id;
+  private locator = (p: Product, id: number) => p.id === Number(id);
 
   constructor(private dataSource: RestDataService, private http: HttpClient) {
     this.products = [];
