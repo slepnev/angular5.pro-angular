@@ -3,6 +3,7 @@ import { MODES, SHARED_STATE, StateService } from '../state.service';
 import { Product } from '../../model/product.model';
 import { RepositoryService } from '../../model/repository.service';
 import { Observer } from 'rxjs/Observer';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-table',
@@ -11,7 +12,9 @@ import { Observer } from 'rxjs/Observer';
 })
 export class TableComponent {
 
-  constructor(private model: RepositoryService, @Inject(SHARED_STATE) private observer: Observer<StateService>) {
+  constructor(private model: RepositoryService,
+              @Inject(SHARED_STATE) private observer: Observer<StateService>,
+              public router: Router) {
   }
 
   getProduct(key: number): Product {
@@ -28,10 +31,12 @@ export class TableComponent {
 
   editProduct(key: number) {
     this.observer.next(new StateService(MODES.EDIT, key));
+    this.router.navigate(['form', 'edit', <string>key]);
   }
 
   createProduct() {
     this.observer.next(new StateService(MODES.CREATE));
+    this.router.navigate(['form', 'create']);
   }
 
 }
