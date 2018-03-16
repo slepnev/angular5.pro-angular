@@ -31,7 +31,7 @@ export class TableComponent {
 
   editProduct(key: number) {
     this.observer.next(new StateService(MODES.EDIT, key));
-    this.router.navigate(['form', 'edit', <string>key]);
+    this.router.navigate(['form', 'edit', key]);
   }
 
   createProduct() {
