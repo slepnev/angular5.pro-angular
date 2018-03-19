@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MODES, SHARED_STATE, StateService } from '../state.service';
 import { Product } from '../../model/product.model';
 import { RepositoryService } from '../../model/repository.service';
@@ -22,7 +22,14 @@ export class TableComponent {
   }
 
   getProducts(): Product[] {
-    return this.model.getProducts();
+    return this.model.getProducts()
+      .filter(p => this.category == null || p.category === this.category);
+  }
+
+  get categories(): string[] {
+    return this.model.getProducts()
+      .map(p => p.category)
+      .filter((category, index, array) => array.indexOf(category) === index);
   }
 
   deleteProduct(key: number) {

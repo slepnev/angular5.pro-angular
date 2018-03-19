@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, Inject } from '@angular/core';
 import { Product } from '../../model/product.model';
-import { MODES, SHARED_STATE, StateService } from '../state.service';
+import { SHARED_STATE, StateService } from '../state.service';
 import { NgForm } from '@angular/forms';
 import { RepositoryService } from '../../model/repository.service';
 import { Observable } from 'rxjs/Observable';
@@ -18,14 +18,13 @@ export class FormComponent implements AfterContentInit{
 
   constructor(private model: RepositoryService, public activatedRoute: ActivatedRoute,
               @Inject(SHARED_STATE) public stateEvents: Observable<StateService>, public router: Router) {
-    stateEvents
-      .subscribe(update => {
-        this.product = new Product();
-        if (update.id !== undefined) {
-          Object.assign(this.product, this.model.getProduct(update.id));
-        }
-        this.editing = update.mode === MODES.EDIT;
-      });
+    activeRoute.params.subscribe(params => {
+      this.editing = params['mode'] === 'edit';
+      const id = params['id'];
+      if (id != null) {
+        Object.assign(this.product, model.getProduct(id) || new Product());
+      }
+    });
   }
 
   ngAfterContentInit() {

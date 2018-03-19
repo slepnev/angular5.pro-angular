@@ -18,18 +18,27 @@ import { NotFoundComponent } from './not-found.component';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, ModelModule, MessageModule, RouterModule],
-  declarations: [TableComponent, FormComponent, StatePipe, ProductCountComponent, CategoryCountComponent, NotFoundComponent],
+  declarations: [
+    TableComponent,
+    FormComponent,
+    StatePipe,
+    ProductCountComponent,
+    CategoryCountComponent,
+    NotFoundComponent],
   exports: [TableComponent, FormComponent, StatePipe],
-  providers: [{
-    provide: SHARED_STATE,
-    deps: [MessageService, RepositoryService],
-    useFactory: (messageService, model) => {
-      const subject = new Subject<StateService>();
-      subject.subscribe(m => messageService.reportMessage(
-        new Message(MODES[m.mode] + (m.id !== undefined ? ` ${model.getProduct(m.id).name}` : ''))
-      ));
-      return subject;
+  providers: [
+    {
+      provide: SHARED_STATE,
+      deps: [MessageService, RepositoryService],
+      useFactory: (messageService, model) => {
+        const subject = new Subject<StateService>();
+        subject.subscribe(m => messageService.reportMessage(
+          new Message(MODES[m.mode] + (m.id !== undefined ? ` ${model.getProduct(m.id).name}` : ''))
+        ));
+        return subject;
+      }
     }
-  }]
+  ]
 })
-export class CoreModule { }
+export class CoreModule {
+}
