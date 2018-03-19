@@ -5,7 +5,6 @@ import { ModelModule } from './model/model.module';
 import { CoreModule } from './core/core.module';
 import { MessageModule } from './messages/message.module';
 import { AppRoutingModule } from './app-routing.module';
-import { RouterModule } from '@angular/router';
 
 
 @NgModule({
