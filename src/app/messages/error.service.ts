@@ -10,8 +10,7 @@ export class ErrorService {
 
   handleError(error) {
     const msg = error instanceof Error ? error.message : error.toString();
-    this.messageService
-      .reportMessage(new Message(msg, true));
+    this.messageService.reportMessage(new Message(msg, true));
   }
 
 }

@@ -1,19 +1,20 @@
-import { Component, Inject } from '@angular/core';
-import { MODES, SHARED_STATE, StateService } from '../state.service';
+import { Component } from '@angular/core';
 import { Product } from '../../model/product.model';
 import { RepositoryService } from '../../model/repository.service';
-import { Observer } from 'rxjs/Observer';
 import { Router } from '@angular/router';
+import { HighlightTrigger } from '../table.animations';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
+  animations: [HighlightTrigger],
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent {
+  public category: any = null;
+  public highlightCategory = '';
 
   constructor(private model: RepositoryService,
-              @Inject(SHARED_STATE) private observer: Observer<StateService>,
               public router: Router) {
   }
 
@@ -21,7 +22,7 @@ export class TableComponent {
     return this.model.getProduct(key);
   }
 
-  getProducts(): Product[] {
+  getProducts(): any[] {
     return this.model.getProducts()
       .filter(p => this.category == null || p.category === this.category);
   }
@@ -37,13 +38,16 @@ export class TableComponent {
   }
 
   editProduct(key: number) {
-    this.observer.next(new StateService(MODES.EDIT, key));
     this.router.navigate(['form', 'edit', key]);
   }
 
   createProduct() {
-    this.observer.next(new StateService(MODES.CREATE));
     this.router.navigate(['form', 'create']);
+  }
+
+  getRowState(category: string): string {
+    return this.highlightCategory == '' ? '' :
+      this.highlightCategory == category ? 'selected' : 'notselected';
   }
 
 }

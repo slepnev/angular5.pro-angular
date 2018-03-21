@@ -12,11 +12,16 @@ const childRoutes: Routes = [
   {path: 'categories', component: CategoryCountComponent}
 ];
 
+
 const routes: Routes = [
-  {path: 'form/edit/:id', component: FormComponent},
-  {path: 'form/create', component: FormComponent},
-  {path: 'table', component: TableComponent, children: childRoutes, resolve: { model: ModelResolver }},
-  {path: 'table/:category', component: TableComponent, children: childRoutes, resolve: { model: ModelResolver }},
+  {
+    path: 'form/:mode/:id', component: FormComponent, resolve: {model: ModelResolver}
+  },
+  {
+    path: 'form/:mode', component: FormComponent, resolve: {model: ModelResolver}
+  },
+  {path: 'table', component: TableComponent, children: childRoutes, resolve: {model: ModelResolver}},
+  {path: 'table/:category', component: TableComponent, children: childRoutes, resolve: {model: ModelResolver}},
   {path: '', redirectTo: 'table', pathMatch: 'full'},
   {path: '**', component: NotFoundComponent}
 ];

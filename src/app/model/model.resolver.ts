@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Model } from './repository.model';
-import { RestDataSource } from './rest.datasource';
-import { Product } from './product.model';
 import { MessageService } from '../messages/message.service';
 import { Message } from '../messages/message.model';
+import { RepositoryService } from './repository.service';
+import { RestDataService } from './rest-data.service';
 
 @Injectable()
-export class ModelResolver {
-  constructor(private model: Model,
-              private dataSource: RestDataSource,
+export class ModelResolver implements Resolve<any> {
+  constructor(private model: RepositoryService,
+              private dataSource: RestDataService,
               private messages: MessageService) {
   }
 
-  resolve(route: ActivatedRouteSnapshot,
-          state: RouterStateSnapshot): Observable<Product[]> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (this.model.getProducts().length === 0) {
       this.messages.reportMessage(new Message('Loading data...'));
       return this.dataSource.getData();
