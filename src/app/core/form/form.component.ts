@@ -11,18 +11,20 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss']
 })
-export class FormComponent implements AfterContentInit{
+export class FormComponent implements AfterContentInit {
 
   product: Product = new Product();
+  originalProduct = new Product();
   editing = false;
 
   constructor(private model: RepositoryService, public activatedRoute: ActivatedRoute,
-              @Inject(SHARED_STATE) public stateEvents: Observable<StateService>, public router: Router) {
-    activeRoute.params.subscribe(params => {
+              public router: Router) {
+    activatedRoute.params.subscribe(params => {
       this.editing = params['mode'] === 'edit';
       const id = params['id'];
       if (id != null) {
         Object.assign(this.product, model.getProduct(id) || new Product());
+        Object.assign(this.originalProduct, this.product);
       }
     });
   }
@@ -38,14 +40,13 @@ export class FormComponent implements AfterContentInit{
   submitForm(form: NgForm) {
     if (form.valid) {
       this.model.saveProduct(this.product);
-      this.product = new Product();
-      form.reset();
+      this.originalProduct = this.product;
       this.router.navigateByUrl('/');
     }
   }
 
-  resetForm() {
-    this.product = new Product();
-  }
+  // resetForm() {
+  //   this.product = new Product();
+  // }
 
 }
